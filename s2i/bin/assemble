@@ -1,0 +1,23 @@
+#!/bin/bash -e
+#
+# S2I assemble script for the 'asciidoctor-fedora' image.
+# The 'assemble' script builds your application source so that it is ready to run.
+#
+# For more information refer to the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+
+# If the 'asciidoctor-fedora' assemble script is executed with the '-h' flag, print the usage.
+if [[ "$1" == "-h" ]]; then
+	exec /usr/libexec/s2i/usage
+fi
+
+
+echo "---> Installing application source..."
+cp -Rf /tmp/src/. ./
+
+echo "---> Building application from source..."
+asciidoctor index.adoc
+
+echo "---> Copying html to Nginx"
+cp -rf index.html /usr/share/nginx/html/index.html
